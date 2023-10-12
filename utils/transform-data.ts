@@ -5,7 +5,7 @@ type DataFilter = {
   _source: Record<string, unknown>
 }
 
-export const transformDataFilter = (arr: DataFilter[]) => {
+export const transformData = (arr: DataFilter[]) => {
   const transformResult = arr.map((el) => el._source)
   return transformResult
 }

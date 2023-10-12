@@ -1,85 +1,75 @@
-import { searchRoute } from './../routes/search-route'
 import util = require('util')
 import { client } from '..'
-import { transformDataFilter } from '../utils'
-
-// multi_match - список этих слов
-const query = {
-  query: {
-    multi_match: {
-      query: 'delenit',
-      fields: ['body', 'email', 'name']
-    }
-  },
-  size: 10,
-  from: 0
-}
-
-// query_string - что то похожие
-// const query = {
-//   query: {
-//     bool: {
-//       should: [
-//         {
-//           query_string: {
-//             query: 'ocnaecati',
-//             default_field: 'body',
-//             type: 'best_fields',
-//             fuzziness: 'AUTO',
-//             fuzzy_transpositions: true,
-//             fuzzy_max_expansions: 50
-//           }
-//         },
-//         {
-//           query_string: {
-//             query: 'ocnaecati',
-//             default_field: 'name',
-//             type: 'best_fields',
-//             fuzziness: 'AUTO',
-//             fuzzy_transpositions: true,
-//             fuzzy_max_expansions: 50
-//           }
-//         },
-//         {
-//           query_string: {
-//             query: 'ocnaecati',
-//             default_field: 'email',
-//             type: 'best_fields',
-//             fuzziness: 'AUTO',
-//             fuzzy_transpositions: true,
-//             fuzzy_max_expansions: 50
-//           }
-//         }
-//       ]
-//     }
-//   },
-//   from: 0,
-//   size: 10
-// }
-
-// match_phrase - точное совпадение
-// const query = {
-//   query: {
-//     bool: {
-//       should: [
-//         { match_phrase: { body: 'deserunt quas accusantium' } },
-//         { match_phrase: { email: 'deserunt quas accusantium' } },
-//         { match_phrase: { name: 'deserunt quas accusantium' } }
-//       ]
-//     }
-//   },
-//   from: 0,
-//   size: 10
-// }
+import {
+  arrFilter,
+  createQueryMatchPhrase,
+  createQueryMultiMatch,
+  splitText,
+  transformData
+} from '../utils'
 
 export const search = async (req, res) => {
   console.log({ q: req.query })
+
+  const typeSearch = req.query.search_type
+  const arrField = arrFilter(req.query.field)
+  const textSearch = splitText(req.query.text)
+  const pageNumber = Number(req.query.page)
+
+  const conf = {
+    text: textSearch,
+    fields: arrField,
+    page: pageNumber
+  }
+
+  const methodsSearch = {
+    multi_match: createQueryMultiMatch(conf),
+    match_phrase: createQueryMatchPhrase(conf)
+  }
+
+  const query = methodsSearch[typeSearch]
+
+  // const query = createQueryMultiMatch({
+  //   text: textSearch,
+  //   fields: arrField,
+  //   page: pageNumber
+  // })
+
+  // const query = createQueryQueryString({
+  //   text: textSearch,
+  //   fields: arrField,
+  //   page: pageNumber
+  // })
+
+  // const query = createQueryMatchPhrase({
+  //   text: textSearch,
+  //   fields: arrField,
+  //   page: pageNumber
+  // })
+
+  // console.log({ query })
+
+  // console.log({ a: util.inspect(query, false, null) })
 
   // const conf = createConf(req.query)
 
   // console.log({ CONF: conf })
 
   // const query = createQuery(conf)
+
+  // const query = {
+  //   query: {
+  //     bool: {
+  //       should: [
+  //         { match_phrase: { body: 'deserunt quas accusantium' } },
+  //         { match_phrase: { email: 'deserunt quas accusantium' } },
+  //         { match_phrase: { name: 'deserunt quas accusantium' } }
+  //       ]
+  //     }
+  //   },
+  //   from: 0,
+  //   size: 10
+  // }
 
   const opensearchResponse = await client.search({
     index: 'd',
@@ -90,7 +80,7 @@ export const search = async (req, res) => {
 
   // console.log({ statusCode })
 
-  const result = transformDataFilter(body.hits.hits)
+  const result = transformData(body.hits.hits)
 
   res.status(statusCode).send({ data: result })
 }
