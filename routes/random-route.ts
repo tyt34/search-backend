@@ -1,5 +1,4 @@
 import { createRandomNumber } from '../controllers'
-
-const router = require('express').Router()
+import { router } from '../utils'
 
 export const randomRoute = router.get('/random', createRandomNumber)
