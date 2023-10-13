@@ -1,67 +1,72 @@
-import { templateShould } from './../constants/search'
 import { sizeOnePage } from '../constants'
 import { SearchConf } from '../types'
 import { getFrom } from './utils'
 
-export const createQueryMultiMatch = (conf: SearchConf) => {
-  // console.log({ conf })
-  const text = conf.text
-  const arrFields = conf.fields
-  // console.log({ arrFields })
+export const createObjMultiMatch = (text: string, arr: string[]) => {
   return {
-    query: {
-      multi_match: {
-        query: text,
-        fields: arrFields
-      }
-    },
-    size: sizeOnePage,
-    from: getFrom(conf.page)
+    multi_match: {
+      query: text,
+      fields: arr
+    }
   }
 }
 
-// export const createQueryQueryString = (confg: SearchConf) => {
-//   const arrShould = confg.fields.reduce((acc, el, i) => {
-//     const should = {
-//       query_string: { ...templateShould }
-//     }
-//     should.query_string.query = confg.text
-//     should.query_string.default_field = el
-//     return [...acc, { ...should }]
-//   }, [])
+export const createQueryMultiMatch = (conf: SearchConf) => {
+  console.log(' Start MultiMatch')
+  const page = conf.page
+  const text = conf.text
+  const arrFields = conf.fields
+  const objMultiMatch = createObjMultiMatch(text, arrFields)
 
-//   const query = {
-//     query: {
-//       bool: {
-//         should: arrShould
-//       }
-//     },
-//     size: sizeOnePage,
-//     from: getFrom(confg.page)
-//   }
+  const resultQuery = {
+    query: {
+      ...objMultiMatch
+    },
+    size: sizeOnePage,
+    from: getFrom(page)
+  }
 
-//   return query
-// }
+  return resultQuery
+}
 
-export const createQueryMatchPhrase = (confg: SearchConf) => {
-  const arrShould = confg.fields.reduce((acc, el, i) => {
+export const createArrMatchPhrase = (conf: SearchConf) => {
+  const arrShould = conf.fields.reduce((acc, el, i) => {
     const should = {
       match_phrase: {
-        [el]: confg.text
+        [el]: {
+          query: conf.text,
+          slop: 3,
+          analyzer: 'standard',
+          zero_terms_query: 'none'
+        }
       }
     }
     return [...acc, should]
   }, [])
 
-  const query = {
+  return arrShould
+}
+
+export const createQueryMatchPhrase = (conf: SearchConf) => {
+  console.log(' Start MatchPhrase')
+
+  const page = conf.page
+  const arrShould = createArrMatchPhrase(conf)
+
+  const resultQuery = {
     query: {
       bool: {
         should: arrShould
       }
     },
     size: sizeOnePage,
-    from: getFrom(confg.page)
+    from: getFrom(page)
   }
 
-  return query
+  return resultQuery
+}
+
+export const methodsSearch = {
+  multi_match: (conf: SearchConf) => createQueryMultiMatch(conf),
+  match_phrase: (conf: SearchConf) => createQueryMatchPhrase(conf)
 }
