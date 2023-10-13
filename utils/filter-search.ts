@@ -9,7 +9,7 @@ export const createFilterSearchQueryMultiMatch = (
   confFilter: FilterConf,
   confSearch: SearchConf
 ) => {
-  const page = confFilter.page
+  const pageNumber = confFilter.page
   const text = confSearch.text
   const arrFields = confSearch.fields
   const objMultiMatch = createObjMultiMatch(text, arrFields)
@@ -27,7 +27,7 @@ export const createFilterSearchQueryMultiMatch = (
       }
     },
     size: sizeOnePage,
-    from: getFrom(page)
+    from: getFrom(pageNumber)
   }
 
   return resultQuery
@@ -37,7 +37,7 @@ export const createFilterSearchQueryMatchPhrase = (
   confFilter: FilterConf,
   confSearch: SearchConf
 ) => {
-  const page = confFilter.page
+  const pageNumber = confFilter.page
   const arrShould = createArrMatchPhrase(confSearch)
   const arrFilter = createArrFilter(confFilter)
 
@@ -55,7 +55,7 @@ export const createFilterSearchQueryMatchPhrase = (
       }
     },
     size: sizeOnePage,
-    from: getFrom(page)
+    from: getFrom(pageNumber)
   }
 
   return resultQuery

@@ -38,12 +38,13 @@ export const createConfFilter = (query): FilterConf => {
   const arrFromNum = arrStrToArrNum(arrFromStr)
   const arrToStr = arrFilter(query.to)
   const arrToNum = arrStrToArrNum(arrToStr)
+  const pageNumber = Number(query.page)
 
   const resultConf = {
     type: arrType,
     from: arrFromNum,
     to: arrToNum,
-    page: Number(query.page)
+    page: pageNumber
   }
 
   return resultConf
@@ -51,6 +52,7 @@ export const createConfFilter = (query): FilterConf => {
 
 export const createQueryFilter = (conf: FilterConf) => {
   const arrFilter = createArrFilter(conf)
+  const pageNumber = Number(conf.page)
 
   const resultQuery = {
     query: {
@@ -59,7 +61,7 @@ export const createQueryFilter = (conf: FilterConf) => {
       }
     },
     size: sizeOnePage,
-    from: getFrom(conf.page)
+    from: getFrom(pageNumber)
   }
 
   return resultQuery

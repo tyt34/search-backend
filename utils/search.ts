@@ -13,7 +13,7 @@ export const createObjMultiMatch = (text: string, arr: string[]) => {
 
 export const createQueryMultiMatch = (conf: SearchConf) => {
   console.log(' Start MultiMatch')
-  const page = conf.page
+  const pageNumber = Number(conf.page)
   const text = conf.text
   const arrFields = conf.fields
   const objMultiMatch = createObjMultiMatch(text, arrFields)
@@ -23,7 +23,7 @@ export const createQueryMultiMatch = (conf: SearchConf) => {
       ...objMultiMatch
     },
     size: sizeOnePage,
-    from: getFrom(page)
+    from: getFrom(pageNumber)
   }
 
   return resultQuery
@@ -50,7 +50,7 @@ export const createArrMatchPhrase = (conf: SearchConf) => {
 export const createQueryMatchPhrase = (conf: SearchConf) => {
   console.log(' Start MatchPhrase')
 
-  const page = conf.page
+  const pageNumber = conf.page
   const arrShould = createArrMatchPhrase(conf)
 
   const resultQuery = {
@@ -60,7 +60,7 @@ export const createQueryMatchPhrase = (conf: SearchConf) => {
       }
     },
     size: sizeOnePage,
-    from: getFrom(page)
+    from: getFrom(pageNumber)
   }
 
   return resultQuery

@@ -2,6 +2,7 @@ import cors = require('cors')
 import express = require('express')
 import { Client } from '@opensearch-project/opensearch'
 import {
+  allDocumentsRoute,
   filterRoute,
   randomRoute,
   searchFilterRoute,
@@ -33,6 +34,7 @@ app.use('/', randomRoute)
 app.use('/', filterRoute)
 app.use('/', searchRoute)
 app.use('/', searchFilterRoute)
+app.use('/', allDocumentsRoute)
 
 app.listen(PORT, () => {
   console.log(`backend start on port: ${PORT}`)
