@@ -3,7 +3,7 @@ import { opensearchConf } from '../constants'
 import {
   createConfFilter,
   createQueryFilter,
-  transformData
+  getReqResult
 } from '../utils'
 
 export const filter = async (req, res) => {
@@ -18,7 +18,7 @@ export const filter = async (req, res) => {
   })
 
   const { body, statusCode } = opensearchResponse
-  const result = transformData(body.hits.hits)
+  const resultReq = getReqResult(body)
 
-  res.status(statusCode).send({ data: result })
+  res.status(statusCode).send(resultReq)
 }

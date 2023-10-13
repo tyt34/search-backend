@@ -1,6 +1,5 @@
-import { sizeOnePage } from '../constants'
 import { SearchConf } from '../types'
-import { getFrom } from './utils'
+import { createPagination } from './utils'
 
 export const createObjMultiMatch = (text: string, arr: string[]) => {
   return {
@@ -17,13 +16,13 @@ export const createQueryMultiMatch = (conf: SearchConf) => {
   const text = conf.text
   const arrFields = conf.fields
   const objMultiMatch = createObjMultiMatch(text, arrFields)
+  const pagination = createPagination(pageNumber)
 
   const resultQuery = {
     query: {
       ...objMultiMatch
     },
-    size: sizeOnePage,
-    from: getFrom(pageNumber)
+    ...pagination
   }
 
   return resultQuery
@@ -52,6 +51,7 @@ export const createQueryMatchPhrase = (conf: SearchConf) => {
 
   const pageNumber = conf.page
   const arrShould = createArrMatchPhrase(conf)
+  const pagination = createPagination(pageNumber)
 
   const resultQuery = {
     query: {
@@ -59,8 +59,7 @@ export const createQueryMatchPhrase = (conf: SearchConf) => {
         should: arrShould
       }
     },
-    size: sizeOnePage,
-    from: getFrom(pageNumber)
+    ...pagination
   }
 
   return resultQuery

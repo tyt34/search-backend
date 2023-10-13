@@ -1,17 +1,17 @@
 import { client } from '..'
-import { opensearchConf, sizeOnePage } from '../constants'
-import { getFrom, transformData } from '../utils'
+import { opensearchConf } from '../constants'
+import { createPagination, getReqResult } from '../utils'
 
 export const allDocuments = async (req, res) => {
   console.log({ qAll: req.query })
   const pageNumber = Number(req.query.page)
+  const pagination = createPagination(pageNumber)
 
   const query = {
     query: {
       match_all: {}
     },
-    size: sizeOnePage,
-    from: getFrom(pageNumber)
+    ...pagination
   }
 
   const opensearchResponse = await client.search({
@@ -20,7 +20,7 @@ export const allDocuments = async (req, res) => {
   })
 
   const { body, statusCode } = opensearchResponse
-  const result = transformData(body.hits.hits)
+  const resultReq = getReqResult(body)
 
-  res.status(statusCode).send({ data: result })
+  res.status(statusCode).send(resultReq)
 }

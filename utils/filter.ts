@@ -1,6 +1,5 @@
-import { sizeOnePage } from '../constants'
 import { FilterConf, QueryObjFilter } from '../types'
-import { arrFilter, arrStrToArrNum, getFrom } from './utils'
+import { arrFilter, arrStrToArrNum, createPagination } from './utils'
 
 export const createArrFilter = (conf: FilterConf) => {
   const arrQueryObj: QueryObjFilter[] = conf.type.reduce(
@@ -53,6 +52,7 @@ export const createConfFilter = (query): FilterConf => {
 export const createQueryFilter = (conf: FilterConf) => {
   const arrFilter = createArrFilter(conf)
   const pageNumber = Number(conf.page)
+  const pagination = createPagination(pageNumber)
 
   const resultQuery = {
     query: {
@@ -60,8 +60,7 @@ export const createQueryFilter = (conf: FilterConf) => {
         must: [...arrFilter]
       }
     },
-    size: sizeOnePage,
-    from: getFrom(pageNumber)
+    ...pagination
   }
 
   return resultQuery

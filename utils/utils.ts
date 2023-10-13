@@ -1,4 +1,5 @@
 import { sizeOnePage } from '../constants'
+import { transformData } from './transform-data'
 
 /**
  * arrStrToArrNum(['1', '2']) -> [1, 2]
@@ -32,3 +33,19 @@ export const getFrom = (num: number) => sizeOnePage * (num - 1)
  * @returns
  */
 export const splitText = (str: string) => str.split('_').join(' ')
+
+export const createPagination = (page: number) => {
+  return {
+    size: sizeOnePage,
+    from: getFrom(page),
+    track_total_hits: true
+  }
+}
+
+export const getReqResult = (body) => {
+  const resultReq = transformData(body.hits.hits)
+  const totalReq = body.hits.total.value
+  const result = { data: resultReq, total: totalReq }
+
+  return result
+}

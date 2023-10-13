@@ -1,9 +1,8 @@
-import util = require('util')
-import { sizeOnePage } from '../constants'
+// import util = require('util')
 import { FilterConf, SearchConf } from '../types'
 import { createArrFilter } from './filter'
 import { createArrMatchPhrase, createObjMultiMatch } from './search'
-import { getFrom } from './utils'
+import { createPagination } from './utils'
 
 export const createFilterSearchQueryMultiMatch = (
   confFilter: FilterConf,
@@ -14,6 +13,7 @@ export const createFilterSearchQueryMultiMatch = (
   const arrFields = confSearch.fields
   const objMultiMatch = createObjMultiMatch(text, arrFields)
   const arrFilter = createArrFilter(confFilter)
+  const pagination = createPagination(pageNumber)
 
   const resultQuery = {
     query: {
@@ -26,8 +26,7 @@ export const createFilterSearchQueryMultiMatch = (
         ]
       }
     },
-    size: sizeOnePage,
-    from: getFrom(pageNumber)
+    ...pagination
   }
 
   return resultQuery
@@ -40,6 +39,7 @@ export const createFilterSearchQueryMatchPhrase = (
   const pageNumber = confFilter.page
   const arrShould = createArrMatchPhrase(confSearch)
   const arrFilter = createArrFilter(confFilter)
+  const pagination = createPagination(pageNumber)
 
   const resultQuery = {
     query: {
@@ -54,8 +54,7 @@ export const createFilterSearchQueryMatchPhrase = (
         ]
       }
     },
-    size: sizeOnePage,
-    from: getFrom(pageNumber)
+    ...pagination
   }
 
   return resultQuery

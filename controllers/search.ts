@@ -2,9 +2,9 @@ import { client } from '..'
 import { opensearchConf } from '../constants'
 import {
   arrFilter,
+  getReqResult,
   methodsSearch,
-  splitText,
-  transformData
+  splitText
 } from '../utils'
 
 export const search = async (req, res) => {
@@ -30,7 +30,7 @@ export const search = async (req, res) => {
   })
 
   const { body, statusCode } = opensearchResponse
-  const result = transformData(body.hits.hits)
+  const resultReq = getReqResult(body)
 
-  res.status(statusCode).send({ data: result })
+  res.status(statusCode).send(resultReq)
 }
