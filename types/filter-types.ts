@@ -3,8 +3,9 @@ export type QueryObjFilter = {
 }
 
 export type FilterConf = {
-  type: string[]
-  from: number[]
-  to: number[]
+  fromId: number | string
+  toId: number | string
+  fromPost: number | string
+  toPost: number | string
   page: number
 }

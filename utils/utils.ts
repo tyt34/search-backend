@@ -1,14 +1,14 @@
 import { sizeOnePage } from '../constants'
 import { transformData } from './transform-data'
 
-/**
- * arrStrToArrNum(['1', '2']) -> [1, 2]
- * @param arr
- * @returns
- */
-export const arrStrToArrNum = (arr: string[]): number[] => {
-  return arr.map((el: string) => Number(el))
-}
+// /**
+//  * arrStrToArrNum(['1', '2']) -> [1, 2]
+//  * @param arr
+//  * @returns
+//  */
+// export const arrStrToArrNum = (arr: string[]): number[] => {
+//   return arr.map((el: string) => Number(el))
+// }
 
 /**
  * arrFilter('a', 'b', '') -> ['a', 'b']
@@ -43,6 +43,7 @@ export const createPagination = (page: number) => {
 }
 
 export const getReqResult = (body) => {
+  // console.log({ body })
   const resultReq = transformData(body.hits.hits)
   const totalReq = body.hits.total.value
   const result = { data: resultReq, total: totalReq }
