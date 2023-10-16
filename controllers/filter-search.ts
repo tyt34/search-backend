@@ -26,13 +26,16 @@ export const filterSearch = async (req, res) => {
 
   const query = methodsFilterSearch[typeSearch](confFilter, confSearch)
 
-  const opensearchResponse = await client.search({
-    index: opensearchConf.index,
-    body: query
-  })
+  try {
+    const opensearchResponse = await client.search({
+      index: opensearchConf.index,
+      body: query
+    })
 
-  const { body, statusCode } = opensearchResponse
-  const resultReq = getReqResult(body)
-
-  res.status(statusCode).send(resultReq)
+    const { body, statusCode } = opensearchResponse
+    const resultReq = getReqResult(body)
+    res.status(statusCode).send(resultReq)
+  } catch (error) {
+    res.status(400).send({ error })
+  }
 }
