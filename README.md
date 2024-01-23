@@ -1,4 +1,4 @@
-# Opensearch-Back
+# Search Using Opensearch Backend
 
 ![](https://shields.io/badge/-JavaScript-yellow)
 ![](https://shields.io/badge/-Node.js-3E863D)
